@@ -4,7 +4,6 @@
 **Vai trò trong nhóm:** Retrieval Owner
 **Ngày nộp:** 13/04/2026  
 **Độ dài yêu cầu:** 500–800 từ
-
 ---
 
 ## 1. Tôi đã làm gì trong lab này? (100-150 từ)
