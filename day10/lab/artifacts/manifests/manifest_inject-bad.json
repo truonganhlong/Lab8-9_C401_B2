@@ -1,0 +1,17 @@
+{
+  "run_id": "inject-bad",
+  "run_timestamp": "2026-04-15T09:40:19.127884+00:00",
+  "raw_path": "data\\raw\\policy_export_inject_bad.csv",
+  "raw_records": 10,
+  "cleaned_records": 6,
+  "quarantine_records": 4,
+  "latest_exported_at": "2026-04-10T08:00:00",
+  "no_refund_fix": true,
+  "skipped_validate": true,
+  "skipped_embed": false,
+  "cleaned_csv": "artifacts\\cleaned\\cleaned_inject-bad.csv",
+  "chroma_path": "./chroma_db_jina",
+  "chroma_collection": "day10_kb",
+  "embedding_provider": "jina",
+  "embedding_model": "jina-embeddings-v5-text-small"
+}

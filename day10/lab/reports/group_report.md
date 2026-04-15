@@ -1,6 +1,6 @@
 # Báo Cáo Nhóm — Lab Day 10: Data Pipeline & Data Observability
 
-**Tên nhóm:** ___________  
+**Tên nhóm:** B2  
 **Thành viên:**
 | Tên | Vai trò (Day 10) | Email |
 |-----|------------------|-------|
@@ -66,11 +66,11 @@ Nếu bỏ rule `stale_source_marker`, sample refund cũ vẫn có thể đi và
 
 **Kịch bản inject:**
 
-_________________
+Nhóm giữ nguyên `data/raw/policy_export_dirty.csv` làm baseline tốt và tạo thêm `data/raw/policy_export_inject_bad.csv` để mô phỏng corruption có chủ đích cho Sprint 3. Ở run `inject-bad`, chúng tôi dùng `--no-refund-fix --skip-validate` để cho phép chunk refund stale (`14 ngày làm việc`) đi qua bước clean và đi tới giai đoạn publish/eval. Log tại `artifacts/logs/run_inject-bad.log` cho thấy đây là run xấu có kiểm soát: `cleaned_records=6`, `quarantine_records=4`, expectation `refund_no_stale_14d_window` fail với `violations=1` và `refund_single_active_chunk` fail với `active_refund_rows=2`. Sau đó nhóm chạy lại pipeline chuẩn với run `sprint2-good`; log tại `artifacts/logs/run_sprint2-good.log` cho thấy dữ liệu quay về trạng thái sạch với `cleaned_records=5`, `quarantine_records=5`, toàn bộ expectation đều OK và chỉ còn `active_refund_rows=1`. Hai file retrieval `eval_bad.csv` và `eval_good.csv` được export từ môi trường nhóm có Chroma hoạt động và được giữ lại trong `artifacts/eval/` làm artifact nộp bài.
 
 **Kết quả định lượng (từ CSV / bảng):**
 
-_________________
+Hai file `artifacts/eval/eval_bad.csv` và `artifacts/eval/eval_good.csv` cho thấy before/after rõ ở câu `q_refund_window`. Trong `eval_bad.csv`, top-1 preview là “Yêu cầu hoàn tiền được chấp nhận trong vòng **14 ngày làm việc**…”, `contains_expected=yes` nhưng `hits_forbidden=yes`, nghĩa là top-k vẫn bị nhiễm stale chunk. Sau khi chạy lại pipeline tốt, `eval_good.csv` đổi top-1 preview sang “Yêu cầu được gửi trong vòng **7 ngày làm việc**…”, đồng thời `hits_forbidden=no`, đúng với policy hiện hành. Các câu không liên quan (`q_p1_sla`, `q_lockout`) giữ nguyên ổn định giữa hai run, cho thấy inject chỉ làm xấu slice refund thay vì phá toàn bộ collection. Ngoài ra, `q_leave_version` ở file good vẫn giữ `contains_expected=yes`, `hits_forbidden=no`, `top1_doc_expected=yes`, nên nhóm có thêm bằng chứng hỗ trợ mức Merit cho versioning HR.
 
 ---
 
@@ -78,7 +78,7 @@ _________________
 
 > SLA bạn chọn, ý nghĩa PASS/WARN/FAIL trên manifest mẫu.
 
-_________________
+Nhóm giữ `FRESHNESS_SLA_HOURS=24` theo mặc định trong lab. Trên manifest baseline `artifacts/manifests/manifest_sprint2.json`, `freshness_check=FAIL` vì `latest_exported_at=2026-04-10T08:00:00` trong khi thời điểm chạy là ngày 15/04/2026, tức snapshot dữ liệu đã cũ hơn 24 giờ. Đây là tín hiệu monitoring đúng mong đợi của bài lab chứ không phải lỗi pipeline: pipeline vẫn clean/validate/publish thành công, nhưng lớp observability báo rằng dữ liệu nguồn đang stale theo SLA. Trong runbook, nhóm sẽ giải thích rõ PASS/WARN/FAIL áp cho độ mới của export snapshot, không áp cho việc script có chạy xong hay không.
 
 ---
 
