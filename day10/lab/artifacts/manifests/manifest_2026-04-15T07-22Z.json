@@ -1,6 +1,6 @@
 {
-  "run_id": "sprint1",
-  "run_timestamp": "2026-04-15T05:40:13.197670+00:00",
+  "run_id": "2026-04-15T07-22Z",
+  "run_timestamp": "2026-04-15T07:22:16.609156+00:00",
   "raw_path": "data\\raw\\policy_export_dirty.csv",
   "raw_records": 10,
   "cleaned_records": 6,
@@ -9,7 +9,7 @@
   "no_refund_fix": false,
   "skipped_validate": false,
   "skipped_embed": false,
-  "cleaned_csv": "artifacts\\cleaned\\cleaned_sprint1.csv",
+  "cleaned_csv": "artifacts\\cleaned\\cleaned_2026-04-15T07-22Z.csv",
   "chroma_path": "./chroma_db_jina",
   "chroma_collection": "day10_kb",
   "embedding_provider": "jina",
